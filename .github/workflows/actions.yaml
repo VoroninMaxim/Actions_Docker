@@ -34,13 +34,14 @@ jobs:
       - name: Run notebook and convert to HTML
         run: |
           jupyter nbconvert --to notebook --execute credit_default_eda.ipynb
-          jupyter nbconvert --to html credit_default_eda.ipynb --output-dir=.
+#          jupyter nbconvert --to html credit_default_eda.ipynb --output-dir=.
+          jupyter nbconvert --to html credit_default_eda.ipynb --output-dir=. --output index.html  # Переименовываем файл в index.html
 
       - name: Commit and push HTML file
         run: |
           git config --local user.email "maksimsazonov476@gmail.com"
           git config --local user.name "VoroninMaxim"
-          git add credit_default_eda.html  # Добавьте сгенерированный HTML файл
+          git add index.html  # Добавьте сгенерированный HTML файл как index.html
           git commit -m "Add generated HTML report from Jupyter notebook"
           git pull origin main  # Сначала выполните pull, чтобы синхронизироваться с удаленным репозиторием
           git push origin main  # Затем выполните push
