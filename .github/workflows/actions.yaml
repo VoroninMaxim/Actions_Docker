@@ -28,7 +28,7 @@ jobs:
 
       - name: Run Black
         run: |
-          #black --check .  # This checks for formatting issues without modifying files
+#          black --check .  # This checks for formatting issues without modifying files
           black --check --line-length 88 .  # Проверка форматирования с учетом длины строки 88 символов
 
       - name: Run notebook and convert to HTML
@@ -36,6 +36,10 @@ jobs:
           jupyter nbconvert --to notebook --execute credit_default_eda.ipynb
 #          jupyter nbconvert --to html credit_default_eda.ipynb --output-dir=.
           jupyter nbconvert --to html credit_default_eda.ipynb --output-dir=. --output index.html  # Переименовываем файл в index.html
+
+          # Проверка содержимого директории после конвертации
+          echo "Содержимое директории:"
+          ls -la .  # Выводим содержимое текущей директории для отладки
 
       - name: Commit and push HTML file
         run: |
