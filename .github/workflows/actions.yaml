@@ -17,7 +17,16 @@ jobs:
           python-version: '3.11'
       - name: Install dependencies
         run: |
-          pip install jupyter nbconvert pandas numpy matplotlib seaborn
-      - name: Run notebook
+          pip install jupyter nbconvert pandas numpy matplotlib seaborn flake8 black
+      - name: Run Flake8
+        run: |
+          flake8 .  # Adjust the path if needed to target specific files or directories
+
+      - name: Run Black
+        run: |
+          black --check .  # This checks for formatting issues without modifying files
+
+      - name: Run notebook and convert to HTML
         run: |
           jupyter nbconvert --to notebook --execute credit_default_eda.ipynb
+          jupyter nbconvert --to html credit_default_eda.ipynb --output-dir=.
