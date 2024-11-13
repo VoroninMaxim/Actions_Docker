@@ -5,9 +5,6 @@ on:
     branches:
       - main
 
-permissions:
-  contents: write  # Ensure write access is granted
-
 jobs:
   run-notebook:
     runs-on: ubuntu-latest
@@ -23,23 +20,21 @@ jobs:
           pip install jupyter nbconvert pandas numpy matplotlib seaborn flake8 black
       - name: Run Flake8
         run: |
-          flake8 .  # Adjust the path if needed to target specific files or directories
+          #flake8 .  # Adjust the path if needed to target specific files or directories
+          flake8 --max-line-length=88 --ignore=E203,W503 . # Игнорируем некоторые ошибки, чтобы избежать конфликтов с Black
 
       - name: Run Black
         run: |
-          black --check .  # This checks for formatting issues without modifying files
+          #black --check .  # This checks for formatting issues without modifying files
+          black --check --line-length 88 .  # Проверка форматирования с учетом длины строки 88 символов
 
       - name: Run notebook and convert to HTML
         run: |
           jupyter nbconvert --to notebook --execute credit_default_eda.ipynb
           jupyter nbconvert --to html credit_default_eda.ipynb --output-dir=.
 
-      - name: Commit and push HTML file
-        run: |
-          git config --local user.email "maksimsazonov476@gmail.com"
-          git config --local user.name "VoroninMaxim"
-          git add credit_default_eda.html  # Adjust if necessary based on output filename
-          git commit -m "Add generated HTML report from Jupyter notebook"
-          git push origin main  # Ensure you are pushing to the correct branch
-        env:
-          GITHUB_TOKEN: ${{ secrets.PACKAGES_ACCESS_TOKEN }}  # Use GitHub token for authentication
+      - name: Upload HTML report as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: credit-default-report
+          path: credit_default_eda.html  # Убедитесь, что имя файла совпадает с тем, что вы генерируете
