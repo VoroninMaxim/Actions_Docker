@@ -30,3 +30,13 @@ jobs:
         run: |
           jupyter nbconvert --to notebook --execute credit_default_eda.ipynb
           jupyter nbconvert --to html credit_default_eda.ipynb --output-dir=.
+
+      - name: Commit and push HTML file
+        run: |
+          git config --local user.email "maksimsazonov476@gmail.com"
+          git config --local user.name "VoroninMaxim"
+          git add credit_default_eda.html  # Adjust if necessary based on output filename
+          git commit -m "Add generated HTML report from Jupyter notebook"
+          git push origin main  # Ensure you are pushing to the correct branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.PACKAGES_ACCESS_TOKEN }}  # Use GitHub token for authentication
